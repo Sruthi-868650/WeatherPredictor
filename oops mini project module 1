@@ -1,0 +1,38 @@
+package airline_project;
+
+class Flight {
+    private int flightNo;
+    private String source, destination;
+    private int seats;
+
+    public Flight(int flightNo, String source, String destination, int seats) {
+        this.flightNo = flightNo;
+        this.source = source;
+        this.destination = destination;
+        this.seats = seats;
+    }
+
+    public void showDetails() {
+        System.out.println("Flight " + flightNo + ": " + source + " → " + destination + " | Seats: " + seats);
+    }
+
+    public boolean bookSeat() {
+        if (seats > 0) {
+            seats--;
+            System.out.println("Seat booked successfully! Remaining seats: " + seats);
+            return true;
+        } else {
+            System.out.println("❌ No seats available!");
+            return false;
+        }
+    }
+}
+
+public class Module1 {
+    public static void main(String[] args) {
+        Flight f1 = new Flight(101, "Chennai", "Delhi", 3);
+        f1.showDetails();
+        f1.bookSeat();
+        f1.bookSeat();
+    }
+}
