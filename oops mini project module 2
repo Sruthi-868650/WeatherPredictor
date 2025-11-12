@@ -1,0 +1,34 @@
+package airline_project;
+
+import java.io.*;
+
+class BookingException extends Exception {
+    public BookingException(String msg) { super(msg); }
+}
+
+public class Module2 {
+    public static void logBooking(String msg) throws IOException {
+        try (FileWriter fw = new FileWriter("bookings.txt", true)) {
+            fw.write(msg + "\n");
+        }
+    }
+
+    public static void checkFlight(int flightNo) throws BookingException {
+        if (flightNo <= 0) throw new BookingException("Invalid Flight Number!");
+        else System.out.println("Flight validated successfully.");
+    }
+
+    public static void main(String[] args) {
+        try {
+            checkFlight(0);
+        } catch (BookingException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        try {
+            logBooking("Passenger A – Flight 101");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
