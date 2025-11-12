@@ -1,0 +1,30 @@
+package airline_project;
+
+class Ticket<T> {
+    private T ticketDetail;
+    public Ticket(T ticketDetail) { this.ticketDetail = ticketDetail; }
+    public void display() { System.out.println("Booking: " + ticketDetail); }
+}
+
+class PassengerThread extends Thread {
+    private String name;
+    public PassengerThread(String name) { this.name = name; }
+
+    public void run() {
+        System.out.println(name + " is booking...");
+        try { Thread.sleep(1000); } catch (InterruptedException e) {}
+        System.out.println(name + " booking completed!");
+    }
+}
+
+public class Module3 {
+    public static void main(String[] args) {
+        Ticket<String> t1 = new Ticket<>("Flight 202 - Seat 5A");
+        t1.display();
+
+        PassengerThread p1 = new PassengerThread("Ravi");
+        PassengerThread p2 = new PassengerThread("Priya");
+        p1.start();
+        p2.start();
+    }
+}
