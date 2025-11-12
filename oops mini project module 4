@@ -1,0 +1,51 @@
+package airline_project;
+
+import java.io.*;
+import java.net.*;
+import java.sql.*;
+
+public class Module4 {
+    static final int PORT = 6060;
+    static final String DB_URL = "jdbc:mysql://localhost:3306/airlinedb";
+    static final String DB_USER = "root";
+    static final String DB_PASS = "root";
+
+    public static void main(String[] args) {
+        new Thread(Module4::startServer, "Server").start();
+        new Thread(Module4::startClient, "Client").start();
+    }
+
+    public static void startServer() {
+        try (ServerSocket server = new ServerSocket(PORT)) {
+            System.out.println("[SERVER] Waiting for booking...");
+            Socket socket = server.accept();
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            String booking = in.readLine();
+            if (booking != null) {
+                insertBooking(booking);
+                System.out.println("[SERVER] Received: " + booking);
+            }
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public static void startClient() {
+        try {
+            Thread.sleep(1000);
+            Socket socket = new Socket("localhost", PORT);
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            String msg = "Passenger Priya booked Flight 202 – Seat 5A";
+            out.println(msg);
+            System.out.println("[CLIENT] Sent: " + msg);
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public static void insertBooking(String msg) throws SQLException, ClassNotFoundException {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        Connection con = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
+        PreparedStatement ps = con.prepareStatement("INSERT INTO bookings(details) VALUES(?)");
+        ps.setString(1, msg);
+        ps.executeUpdate();
+        con.close();
+        System.out.println("[DB] Booking stored successfully.");
+    }
+}
